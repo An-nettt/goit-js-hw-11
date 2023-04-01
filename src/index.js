@@ -10,7 +10,7 @@ const fetchImagesAPI = new FetchImagesAPI();
 function onSubmitClick(event) {
   event.preventDefault();
   fetchImagesAPI.query = formEl.elements.searchQuery.value.trim();
-  //   console.log(formEl.elements.searchQuery.value);
+  console.log(formEl.elements.searchQuery.value);
 
   fetchImagesAPI
     .fetchImages()
