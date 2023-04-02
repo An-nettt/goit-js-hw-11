@@ -5,17 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+    <link rel="stylesheet" href="./sass/index.scss" />
+    <script type="module" src="./index.js"></script>
   </head>
   <body>
     <form class="search-form" id="search-form">
       <input
         type="text"
+        class="search-input"
         name="searchQuery"
         autocomplete="off"
         placeholder="Search images..."
       />
-      <button type="submit">Search</button>
+      <button type="submit" class="search-btn">Search</button>
     </form>
     <div class="gallery"></div>
+    <button type="button" class="load-more">Load more</button>
   </body>
 </html>
