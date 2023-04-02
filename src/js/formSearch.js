@@ -20,7 +20,7 @@ export class FetchImagesAPI {
       page: this.page,
       ...this.options,
     });
-    console.log(`${searchParams}`);
+    // console.log(`${searchParams}`);
 
     return fetch(`${this.#BASE_URL}?${searchParams}`).then(res => {
       if (!res.ok) {

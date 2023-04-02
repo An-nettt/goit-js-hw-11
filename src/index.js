@@ -2,6 +2,9 @@
 
 import { FetchImagesAPI } from './js/formSearch';
 import Notiflix from 'notiflix';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+import OnlyScroll from 'only-scrollbar';
 
 const refs = {
   formEl: document.querySelector('.search-form'),
@@ -10,7 +13,7 @@ const refs = {
 };
 const fetchImagesAPI = new FetchImagesAPI();
 let imagesList = '';
-refs.loadMoreBtn.classList.add('is-hidden');
+let gallery = new SimpleLightbox('.gallery a');
 
 refs.formEl.addEventListener('submit', onSubmitClick);
 refs.loadMoreBtn.addEventListener('click', loadMoreBtnClick);
@@ -25,19 +28,21 @@ function onSubmitClick(event) {
   fetchImagesAPI
     .fetchImages()
     .then(data => {
-      console.log(data);
+      // console.log(data);
       if (data.total === 0) {
+        // refs.loadMoreBtn.classList.add('is-hidden');
         Notiflix.Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.'
         );
       }
+
       if (data.total !== 0) {
         markuplist(data);
+        Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images.`);
         refs.listEl.innerHTML = imagesList;
+        gallery.refresh();
 
-        // if (data.totalHits === fetchImagesAPI.page) {
-        // }
-        refs.loadMoreBtn.classList.remove('is-hidden');
+        // refs.loadMoreBtn.classList.remove('is-hidden');
       }
     })
     .catch(error => {
@@ -49,19 +54,19 @@ function markuplist(el) {
   imagesList = el.hits.map(
     element =>
       `<div class="photo-card">
-        <img src="${element.webformatURL}" alt="${element.tags}" loading="lazy" />
+        <a href="${element.largeImageURL}"> <img src="${element.webformatURL}" alt="${element.tags}" loading="lazy" /></a>
         <div class="info">
           <p class="info-item">
-          <b>Likes</b> ${element.likes}
+          <b class ="info-name">Likes</b> ${element.likes}
           </p>
           <p class="info-item">
-          <b>Views</b> ${element.views}
+          <b class ="info-name">Views</b> ${element.views}
           </p>
           <p class="info-item">
-            <b>Comments</b> ${element.comments}
+            <b class ="info-name">Comments</b> ${element.comments}
           </p>
           <p class="info-item">
-            <b>Downloads</b> ${element.downloads}
+            <b class ="info-name">Downloads</b> ${element.downloads}
           </p>   
         </div>
       </div>`
@@ -74,11 +79,27 @@ function clearMarkUp() {
 }
 
 function loadMoreBtnClick() {
-  console.log(fetchImagesAPI.page);
+  // console.log(fetchImagesAPI.page);
   fetchImagesAPI.page += 1;
   fetchImagesAPI.fetchImages().then(data => {
     // console.log(data);
     markuplist(data);
+    if (data.hits.length === 0) {
+      // console.log(data.hits.length);
+      refs.loadMoreBtn.classList.add('is-hidden');
+      Notiflix.Notify.info(
+        "We're sorry, but you've reached the end of search results."
+      );
+    }
     refs.listEl.insertAdjacentHTML('beforeend', imagesList);
   });
 }
+
+const { height: cardHeight } = document
+  .querySelector('.gallery')
+  .firstElementChild.getBoundingClientRect();
+
+window.scrollBy({
+  top: cardHeight * 2,
+  behavior: 'smooth',
+});
