@@ -16,13 +16,17 @@ export class FetchImagesAPI {
     webformatWidth: '_340',
   };
 
-  fetchImages() {
+  async fetchImages() {
     const searchParams = new URLSearchParams({
       q: this.query,
       page: this.page,
       ...this.options,
     });
 
-    return axios.get(`${this.#BASE_URL}?${searchParams}`);
+    try {
+      return axios.get(`${this.#BASE_URL}?${searchParams}`);
+    } catch (error) {
+      throw new Error(error.message);
+    }
   }
 }

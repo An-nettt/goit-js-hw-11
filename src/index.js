@@ -82,13 +82,10 @@ function clearMarkUp() {
 }
 
 function loadMoreBtnClick() {
-  // console.log(fetchImagesAPI.page);
   fetchImagesAPI.page += 1;
   fetchImagesAPI.fetchImages().then(data => {
-    // console.log(data);
     markuplist(data);
     if (data.hits.length === 0) {
-      // console.log(data.hits.length);
       refs.loadMoreBtn.classList.add('is-hidden');
       Notiflix.Notify.info(
         "We're sorry, but you've reached the end of search results."
