@@ -27,8 +27,8 @@ function onSubmitClick(event) {
 
   fetchImagesAPI
     .fetchImages()
-    .then(data => {
-      // console.log(data);
+    .then(({ data }) => {
+      console.log(data);
       if (data.total === 0) {
         // refs.loadMoreBtn.classList.add('is-hidden');
         Notiflix.Notify.failure(
@@ -38,6 +38,7 @@ function onSubmitClick(event) {
 
       if (data.total !== 0) {
         markuplist(data);
+
         Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images.`);
         refs.listEl.innerHTML = imagesList;
         gallery.refresh();
@@ -51,9 +52,10 @@ function onSubmitClick(event) {
 }
 
 function markuplist(el) {
-  imagesList = el.hits.map(
-    element =>
-      `<div class="photo-card">
+  imagesList = el.hits
+    .map(
+      element =>
+        `<div class="photo-card">
         <a href="${element.largeImageURL}"> <img src="${element.webformatURL}" alt="${element.tags}" loading="lazy" /></a>
         <div class="info">
           <p class="info-item">
@@ -70,7 +72,8 @@ function markuplist(el) {
           </p>   
         </div>
       </div>`
-  );
+    )
+    .join('');
   return imagesList;
 }
 
@@ -95,11 +98,11 @@ function loadMoreBtnClick() {
   });
 }
 
-const { height: cardHeight } = document
-  .querySelector('.gallery')
-  .firstElementChild.getBoundingClientRect();
+// const { height: cardHeight } = document
+//   .querySelector('.gallery')
+//   .firstElementChild.getBoundingClientRect();
 
-window.scrollBy({
-  top: cardHeight * 2,
-  behavior: 'smooth',
-});
+// window.scrollBy({
+//   top: cardHeight * 2,
+//   behavior: 'smooth',
+// });

@@ -1,3 +1,4 @@
+import axios from 'axios';
 export class FetchImagesAPI {
   #BASE_URL = 'https://pixabay.com/api/';
   #API_KEY = '34753200-909a3cccc831787159f9f5943';
@@ -12,6 +13,7 @@ export class FetchImagesAPI {
     image_type: 'photo',
     orientation: 'horizontal',
     safesearch: true,
+    webformatWidth: '_340',
   };
 
   fetchImages() {
@@ -20,13 +22,7 @@ export class FetchImagesAPI {
       page: this.page,
       ...this.options,
     });
-    // console.log(`${searchParams}`);
 
-    return fetch(`${this.#BASE_URL}?${searchParams}`).then(res => {
-      if (!res.ok) {
-        throw new Error(res.status);
-      }
-      return res.json();
-    });
+    return axios.get(`${this.#BASE_URL}?${searchParams}`);
   }
 }
