@@ -88,7 +88,7 @@ function loadMoreBtnClick() {
   fetchImagesAPI.page += 1;
   fetchImagesAPI.fetchImages().then(data => {
     console.log(data);
-    markuplist(data.hits);
+    markuplist({ data.hits });
     if (data.hits.length === 0) {
       refs.loadMoreBtn.classList.add('is-hidden');
       Notiflix.Notify.info(
