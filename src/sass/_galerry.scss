@@ -23,19 +23,13 @@
 
 .info {
   display: flex;
-  justify-content: center;
-  align-items: flex-end;
-  gap: 10px;
-  margin-bottom: 8px;
+  justify-content: space-around;
+  align-items: center;
+  margin: 10px;
 }
 
 .info-item {
   display: flex;
-  flex-wrap: wrap;
-  margin-top: 5px;
-  margin-left: 10px;
-}
-
-.info-name {
-  width: 100%;
+  text-align: center;
+  flex-direction: column;
 }

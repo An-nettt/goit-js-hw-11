@@ -29,8 +29,12 @@ function onSubmitClick(event) {
     .fetchImages()
     .then(({ data }) => {
       console.log(data);
+      console.log(fetchImagesAPI.query);
+      if (fetchImagesAPI.query === '') {
+        Notiflix.Notify.failure('Enter your data to search.');
+      }
       if (data.total === 0) {
-        // refs.loadMoreBtn.classList.add('is-hidden');
+        refs.loadMoreBtn.classList.add('is-hidden');
         Notiflix.Notify.failure(
           'Sorry, there are no images matching your search query. Please try again.'
         );
@@ -43,7 +47,7 @@ function onSubmitClick(event) {
         refs.listEl.innerHTML = imagesList;
         gallery.refresh();
 
-        // refs.loadMoreBtn.classList.remove('is-hidden');
+        refs.loadMoreBtn.classList.remove('is-hidden');
       }
     })
     .catch(error => {
@@ -59,16 +63,16 @@ function markuplist(el) {
         <a href="${element.largeImageURL}"> <img src="${element.webformatURL}" alt="${element.tags}" loading="lazy" /></a>
         <div class="info">
           <p class="info-item">
-          <b class ="info-name">Likes</b> ${element.likes}
+          <b>Likes</b> ${element.likes}
           </p>
           <p class="info-item">
-          <b class ="info-name">Views</b> ${element.views}
+          <b>Views</b> ${element.views}
           </p>
           <p class="info-item">
-            <b class ="info-name">Comments</b> ${element.comments}
+            <b>Comments</b> ${element.comments}
           </p>
           <p class="info-item">
-            <b class ="info-name">Downloads</b> ${element.downloads}
+            <b>Downloads</b> ${element.downloads}
           </p>   
         </div>
       </div>`
@@ -84,6 +88,7 @@ function clearMarkUp() {
 function loadMoreBtnClick() {
   fetchImagesAPI.page += 1;
   fetchImagesAPI.fetchImages().then(data => {
+    console.log(data);
     markuplist(data);
     if (data.hits.length === 0) {
       refs.loadMoreBtn.classList.add('is-hidden');
@@ -95,10 +100,12 @@ function loadMoreBtnClick() {
   });
 }
 
-const { height: cardHeight } =
-  refs.listEl.firstElementChild.getBoundingClientRect();
-
-window.scrollBy({
-  top: cardHeight * 2,
-  behavior: 'smooth',
-});
+function onSmoothScroll() {
+  const { height: cardHeight } = refs.listEl.firstElementChild
+    .getBoundingClientRect()
+    .top.toFixed();
+  window.scrollBy({
+    top: cardHeight * 2,
+    behavior: 'smooth',
+  });
+}
