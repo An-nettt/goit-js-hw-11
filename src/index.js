@@ -42,11 +42,15 @@ function onSubmitClick(event) {
       if (data.total !== 0 && fetchImagesAPI.query !== '') {
         markuplist(data);
 
-        Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images.`);
+        Notiflix.Notify.info(`Hooray! We found ${data.total} images.`);
         refs.listEl.innerHTML = imagesList;
         gallery.refresh();
 
         refs.loadMoreBtn.classList.remove('is-hidden');
+      }
+
+      if (data.hits.length < fetchImagesAPI.count) {
+        refs.loadMoreBtn.classList.add('is-hidden');
       }
     })
     .catch(error => {
