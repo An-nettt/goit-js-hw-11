@@ -40,7 +40,7 @@ function onSubmitClick(event) {
         );
       }
 
-      if (data.total !== 0) {
+      if (data.total !== 0 && fetchImagesAPI.query !== '') {
         markuplist(data);
 
         Notiflix.Notify.info(`Hooray! We found ${data.totalHits} images.`);
