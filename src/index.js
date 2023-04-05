@@ -86,10 +86,9 @@ function clearMarkUp() {
 
 function loadMoreBtnClick() {
   fetchImagesAPI.page += 1;
-  fetchImagesAPI.fetchImages().then(data => {
-    console.log(data);
-    markuplist(data);
-    if (data.hits.length === 0) {
+  fetchImagesAPI.fetchImages().then(el => {
+    markuplist(el.data);
+    if (el.data.hits.length === 0) {
       refs.loadMoreBtn.classList.add('is-hidden');
       Notiflix.Notify.info(
         "We're sorry, but you've reached the end of search results."
