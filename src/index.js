@@ -4,7 +4,6 @@ import { FetchImagesAPI } from './js/formSearch';
 import Notiflix from 'notiflix';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-import OnlyScroll from 'only-scrollbar';
 
 const refs = {
   formEl: document.querySelector('.search-form'),
@@ -32,6 +31,7 @@ function onSubmitClick(event) {
       if (fetchImagesAPI.query === '') {
         Notiflix.Notify.failure('Please, enter your data to search.');
       }
+
       if (data.total === 0) {
         refs.loadMoreBtn.classList.add('is-hidden');
         Notiflix.Notify.failure(
@@ -46,7 +46,7 @@ function onSubmitClick(event) {
         refs.listEl.innerHTML = imagesList;
         gallery.refresh();
 
-        refs.loadMoreBtn.classList.remove('is-hidden');
+        // refs.loadMoreBtn.classList.remove('is-hidden');
       }
 
       if (data.hits.length < fetchImagesAPI.count) {
@@ -98,6 +98,7 @@ function loadMoreBtnClick() {
         "We're sorry, but you've reached the end of search results."
       );
     }
+    onSmoothScroll();
     refs.listEl.insertAdjacentHTML('beforeend', imagesList);
   });
 }
@@ -111,3 +112,19 @@ function onSmoothScroll() {
     behavior: 'smooth',
   });
 }
+
+window.addEventListener('scroll', function () {
+  var counter = 1;
+
+  const contentHeight = refs.listEl.offsetHeight;
+  const yOffset = window.pageYOffset;
+  const window_height = window.innerHeight;
+  const y = yOffset + window_height;
+
+  if (y >= contentHeight) {
+    fetchImagesAPI.fetchImages().then(el => {
+      markuplist(el.data);
+      refs.listEl.insertAdjacentHTML('beforeend', imagesList);
+    });
+  }
+});
