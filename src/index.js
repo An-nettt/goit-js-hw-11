@@ -16,6 +16,7 @@ let gallery = new SimpleLightbox('.gallery a');
 
 refs.formEl.addEventListener('submit', onSubmitClick);
 refs.loadMoreBtn.addEventListener('click', loadMoreBtnClick);
+window.addEventListener('scroll', infiniteScroll);
 
 function onSubmitClick(event) {
   event.preventDefault();
@@ -27,7 +28,6 @@ function onSubmitClick(event) {
   fetchImagesAPI
     .fetchImages()
     .then(({ data }) => {
-      console.log(data);
       if (fetchImagesAPI.query === '') {
         Notiflix.Notify.failure('Please, enter your data to search.');
       }
@@ -45,7 +45,6 @@ function onSubmitClick(event) {
         Notiflix.Notify.info(`Hooray! We found ${data.total} images.`);
         refs.listEl.innerHTML = imagesList;
         gallery.refresh();
-
         // refs.loadMoreBtn.classList.remove('is-hidden');
       }
 
@@ -90,6 +89,7 @@ function clearMarkUp() {
 
 function loadMoreBtnClick() {
   fetchImagesAPI.page += 1;
+
   fetchImagesAPI.fetchImages().then(el => {
     markuplist(el.data);
     if (el.data.hits.length === 0) {
@@ -100,31 +100,38 @@ function loadMoreBtnClick() {
     }
     onSmoothScroll();
     refs.listEl.insertAdjacentHTML('beforeend', imagesList);
+    gallery.refresh();
   });
 }
 
 function onSmoothScroll() {
-  const { height: cardHeight } = refs.listEl.firstElementChild
-    .getBoundingClientRect()
-    .top.toFixed();
+  const { height: cardHeight } =
+    refs.listEl.firstElementChild.getBoundingClientRect();
   window.scrollBy({
     top: cardHeight * 2,
     behavior: 'smooth',
   });
 }
 
-window.addEventListener('scroll', function () {
-  var counter = 1;
-
+function infiniteScroll() {
   const contentHeight = refs.listEl.offsetHeight;
   const yOffset = window.pageYOffset;
   const window_height = window.innerHeight;
-  const y = yOffset + window_height;
+  const stopScroll = yOffset + window_height;
 
-  if (y >= contentHeight) {
+  if (stopScroll >= contentHeight) {
+    fetchImagesAPI.page += 1;
     fetchImagesAPI.fetchImages().then(el => {
+      if (el.data.hits.length === 0) {
+        Notiflix.Notify.info(
+          "We're sorry, but you've reached the end of search results."
+        );
+        return;
+      }
+
       markuplist(el.data);
       refs.listEl.insertAdjacentHTML('beforeend', imagesList);
+      gallery.refresh();
     });
   }
-});
+}

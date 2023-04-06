@@ -24,7 +24,7 @@ export class FetchImagesAPI {
     });
 
     try {
-      return axios.get(`${this.#BASE_URL}?${searchParams}`);
+      return await axios.get(`${this.#BASE_URL}?${searchParams}`);
     } catch (error) {
       throw new Error(error.message);
     }
